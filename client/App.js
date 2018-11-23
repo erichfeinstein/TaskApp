@@ -16,10 +16,11 @@ export default class App extends React.Component {
     return (
       <div>
         <h1>Tasks</h1>
-        <ul>
+        <ul id="task-list">
           {this.state.tasks.map(task => {
             return (
               <li
+                className={task.complete ? 'task-complete' : 'task-incomplete'}
                 key={task.id}
                 onClick={async evt => {
                   if (!task.complete) await this.completeTask(evt, task.id);
@@ -32,7 +33,6 @@ export default class App extends React.Component {
           })}
           <div id="new-task-field">
             <input id="new-task-info" placeholder={'Enter new task!'} />
-            <button id="confirm-button">Confirm</button>
           </div>
         </ul>
       </div>
@@ -74,11 +74,12 @@ export default class App extends React.Component {
       tasks,
     });
 
-    const button = document.getElementById('confirm-button');
-    button.addEventListener('click', () => {
-      this.createNewTask(document.getElementById('new-task-info').value);
-      //Revert input field value
-      document.getElementById('new-task-info').value = '';
+    const newTaskInput = document.getElementById('new-task-info');
+    newTaskInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        this.createNewTask(newTaskInput.value);
+        newTaskInput.value = '';
+      }
     });
   }
 }

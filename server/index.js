@@ -18,7 +18,9 @@ app.get('/', function(req, res, next) {
 
 app.get('/api', async function(req, res, next) {
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({
+      order: [['id', 'ASC']],
+    });
     res.json(tasks);
   } catch (err) {
     console.error(err);

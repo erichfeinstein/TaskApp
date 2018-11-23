@@ -224,11 +224,12 @@ var App = function (_React$Component) {
         ),
         _react2.default.createElement(
           'ul',
-          null,
+          { id: 'task-list' },
           this.state.tasks.map(function (task) {
             return _react2.default.createElement(
               'li',
               {
+                className: task.complete ? 'task-complete' : 'task-incomplete',
                 key: task.id,
                 onClick: function () {
                   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(evt) {
@@ -271,12 +272,7 @@ var App = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { id: 'new-task-field' },
-            _react2.default.createElement('input', { id: 'new-task-info', placeholder: 'Enter new task!' }),
-            _react2.default.createElement(
-              'button',
-              { id: 'confirm-button' },
-              'Confirm'
-            )
+            _react2.default.createElement('input', { id: 'new-task-info', placeholder: 'Enter new task!' })
           )
         )
       );
@@ -331,7 +327,7 @@ var App = function (_React$Component) {
       var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
         var _this4 = this;
 
-        var tasks, button;
+        var tasks, newTaskInput;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -346,12 +342,13 @@ var App = function (_React$Component) {
                   tasks: tasks
                 });
 
-                button = document.getElementById('confirm-button');
+                newTaskInput = document.getElementById('new-task-info');
 
-                button.addEventListener('click', function () {
-                  _this4.createNewTask(document.getElementById('new-task-info').value);
-                  //Revert input field value
-                  document.getElementById('new-task-info').value = '';
+                newTaskInput.addEventListener('keydown', function (event) {
+                  if (event.key === 'Enter') {
+                    _this4.createNewTask(newTaskInput.value);
+                    newTaskInput.value = '';
+                  }
                 });
 
               case 6:
