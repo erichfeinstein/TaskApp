@@ -3,7 +3,6 @@ const server = require('./index');
 const dbModels = require('./db');
 const db = dbModels.db;
 const Task = dbModels.Task;
-console.log(Task);
 
 db.sync().then(() => {
   server.listen(PORT, () =>

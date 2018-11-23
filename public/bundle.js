@@ -124,19 +124,96 @@ var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
   function App() {
+    var _this2 = this;
+
     _classCallCheck(this, App);
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
+    _this.completeTask = function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(evt, idToComplete) {
+        var result, newTaskList;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _axios2.default.put('/' + idToComplete, { complete: true });
+
+              case 2:
+                result = _context.sent;
+                _context.next = 5;
+                return _axios2.default.get('/api');
+
+              case 5:
+                newTaskList = _context.sent.data;
+
+                _this.setState({
+                  tasks: newTaskList
+                });
+
+              case 7:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, _this2);
+      }));
+
+      return function (_x, _x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    _this.removeTask = function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(evt, idToRemove) {
+        var result, newTaskList;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _axios2.default.delete('/' + idToRemove);
+
+              case 2:
+                result = _context2.sent;
+                _context2.next = 5;
+                return _axios2.default.get('/api');
+
+              case 5:
+                newTaskList = _context2.sent.data;
+
+                _this.setState({
+                  tasks: newTaskList
+                });
+
+              case 7:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, _this2);
+      }));
+
+      return function (_x3, _x4) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
     _this.state = {
       tasks: []
     };
+    _this.completeTask = _this.completeTask.bind(_this);
+    _this.removeTask = _this.removeTask.bind(_this);
+    _this.createNewTask = _this.createNewTask.bind(_this);
     return _this;
   }
 
   _createClass(App, [{
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
         'div',
         null,
@@ -151,42 +228,142 @@ var App = function (_React$Component) {
           this.state.tasks.map(function (task) {
             return _react2.default.createElement(
               'li',
-              { key: task.id },
+              {
+                key: task.id,
+                onClick: function () {
+                  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(evt) {
+                    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                      while (1) {
+                        switch (_context3.prev = _context3.next) {
+                          case 0:
+                            if (task.complete) {
+                              _context3.next = 5;
+                              break;
+                            }
+
+                            _context3.next = 3;
+                            return _this3.completeTask(evt, task.id);
+
+                          case 3:
+                            _context3.next = 7;
+                            break;
+
+                          case 5:
+                            _context3.next = 7;
+                            return _this3.removeTask(evt, task.id);
+
+                          case 7:
+                          case 'end':
+                            return _context3.stop();
+                        }
+                      }
+                    }, _callee3, _this3);
+                  }));
+
+                  return function (_x5) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }()
+              },
               task.taskContent
             );
-          })
+          }),
+          _react2.default.createElement(
+            'div',
+            { id: 'new-task-field' },
+            _react2.default.createElement('input', { id: 'new-task-info', placeholder: 'Enter new task!' }),
+            _react2.default.createElement(
+              'button',
+              { id: 'confirm-button' },
+              'Confirm'
+            )
+          )
         )
       );
     }
   }, {
+    key: 'createNewTask',
+    value: function () {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(content) {
+        var result, prevTaskList;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios2.default.post('/', { taskContent: content });
+
+              case 3:
+                result = _context4.sent;
+                prevTaskList = this.state.tasks;
+
+                prevTaskList.push(result.data);
+                this.setState({
+                  tasks: prevTaskList
+                });
+                _context4.next = 12;
+                break;
+
+              case 9:
+                _context4.prev = 9;
+                _context4.t0 = _context4['catch'](0);
+
+                console.error(_context4.t0);
+
+              case 12:
+              case 'end':
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[0, 9]]);
+      }));
+
+      function createNewTask(_x6) {
+        return _ref4.apply(this, arguments);
+      }
+
+      return createNewTask;
+    }()
+  }, {
     key: 'componentDidMount',
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var tasks;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+        var _this4 = this;
+
+        var tasks, button;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context.next = 2;
-                return (0, _axios2.default)('/api');
+                _context5.next = 2;
+                return _axios2.default.get('/api');
 
               case 2:
-                tasks = _context.sent;
+                tasks = _context5.sent.data;
 
                 this.setState({
                   tasks: tasks
                 });
 
-              case 4:
+                button = document.getElementById('confirm-button');
+
+                button.addEventListener('click', function () {
+                  _this4.createNewTask(document.getElementById('new-task-info').value);
+                  //Revert input field value
+                  document.getElementById('new-task-info').value = '';
+                });
+
+              case 6:
               case 'end':
-                return _context.stop();
+                return _context5.stop();
             }
           }
-        }, _callee, this);
+        }, _callee5, this);
       }));
 
       function componentDidMount() {
-        return _ref.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       }
 
       return componentDidMount;
